@@ -56,33 +56,23 @@
         </a>
     </div>
 </div> --}}
-{{-- <!-- #END# Widgets -->
+<!-- #END# Widgets -->
 <div class="row clearfix">
     <!-- Answered Tickets -->
     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
         <div class="card">
             <div class="body bg-teal">
-                <div class="font-bold m-b--35">DAILY IMPORTED DATA OFFICER</div>
+                <div class="font-bold m-b--35">LIST SS</div>
                 <ul class="dashboard-stat-list">
-                    @foreach ($datas['data'] as $key => $data)
-                        @if ($data == 0)
-                            <li style="color:yellow">
-                               ! Today Daily Report {{ucwords($datas['person'][$key])}} Not Imported
-                                <span class="pull-right"><b>{{$data}}</b> <small>DATA</small></span>
-                            </li>
-                        @else
-                            <li>
-                                Today Daily Report {{ucwords($datas['person'][$key])}} Imported
-                                <span class="pull-right"><b>{{$data}}</b> <small>DATA</small></span>
-                            </li>
-                        @endif
-                    @endforeach
+                    <li style="color:yellow">
+                        <span class="pull-right"><b>TRY</b> <small>DATA</small></span>
+                    </li>
                 </ul>
             </div>
         </div>
     </div>
     <!-- #END# Answered Tickets -->
-</div> --}}
+</div>
 
 {{-- <div class="row clearfix">
     <!-- Task Info -->

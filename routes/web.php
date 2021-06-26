@@ -14,10 +14,15 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
-
-Route::get('/', function () {
-    return view('admin.pages.home');
+Route::middleware(['auth:sanctum'])->group(function () {
+    Route::get('/', function () {
+        return view('admin.pages.home');
+    });
+    Route::get('/mining', [PageController::class, 'IndexValues'])->name('mining');
+    Route::get('/mining-data', [PageController::class, 'GetValues'])->name('mining-data');
+    Route::get('/withdraw-data', [PageController::class, 'GetValuesWithdraw'])->name('withdraw-data');
 });
-Route::get('/mining', [PageController::class, 'IndexValues'])->name('mining');
-Route::get('/mining-data', [PageController::class, 'GetValues'])->name('mining-data');
-Route::get('/withdraw-data', [PageController::class, 'GetValuesWithdraw'])->name('withdraw-data');
+
+Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
+    return view('dashboard');
+})->name('dashboard');
