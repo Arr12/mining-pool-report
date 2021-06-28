@@ -165,7 +165,7 @@ class PageController extends Controller
             $date = $this->WeekFromDate($m);
             $startdate = $date['startdate'][0];
             $enddate = $date['enddate'][count($date['enddate'])-1];
-            $x = $sanitizer->whereBetween(1, [$startdate, $enddate]);
+            $x = $sanitizer->whereBetween(0, [$startdate, $enddate]);
             foreach($x->toArray() as $key => $val){
                 array_push($data_array['data'], $val);
             }
@@ -223,7 +223,7 @@ class PageController extends Controller
             $date = $this->WeekFromDate($m);
             $startdate = $date['startdate'][0];
             $enddate = $date['enddate'][count($date['enddate'])-1];
-            $x = $sanitizer->whereBetween(1, [$startdate, $enddate]);
+            $x = $sanitizer->whereBetween(0, [$startdate, $enddate]);
             foreach($x->toArray() as $key => $val){
                 array_push($data_array['data'], $val);
             }
