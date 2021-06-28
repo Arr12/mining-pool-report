@@ -62,9 +62,23 @@ class PageController extends Controller
         }while($endarr[$i-1]<$nextmonth);
         return $date;
     }
-    public function IndexValues(Request $request){
+    public function IndexHome(){
+        $ClassMenu = new SheetController;
+        $menu = $ClassMenu->GetWorksheet();
+        $arr = [];
+        foreach($menu->worksheet_list->sheet_title as $key => $value){
+            $x = $this->IndexValues($value);
+            array_push($arr, $x);
+        }
+        return view('admin.pages.home',[
+            'home_menus' => $menu,
+            'profile' => $arr,
+        ]);
+    }
+    public function IndexValues($request){
         $df = new SheetController;
-        $x = $df->GetValue($request->input('d'));
+        $val = $request ?: request()->input('d');
+        $x = $df->GetValue($val);
         // dd($x->value[0]);
         $arr = [
             'worker_name' => isset($x->value[0][0][2]) ? $x->value[0][0][2] : 0,

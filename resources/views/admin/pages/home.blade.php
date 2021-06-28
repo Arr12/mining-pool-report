@@ -1,3 +1,4 @@
+@dd($profile)
 @extends('admin.layouts.app')
 {{-- @dd($menu->worksheet_list->sheet_title) --}}
 @push('before-style')
@@ -61,14 +62,25 @@
     <!-- Answered Tickets -->
     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
         <div class="card">
-            <div class="body bg-teal">
-                <div class="font-bold m-b--35">LIST SS</div>
-                <ul class="dashboard-stat-list">
-                    <li style="color:yellow">
-                        <span class="pull-right"><b>TRY</b> <small>DATA</small></span>
-                    </li>
-                </ul>
+            <div class="header bg-teal">
+                <h2>
+                    List SS
+                </h2>
             </div>
+            @foreach ($home_menus->worksheet_list->sheet_title as $key => $data)
+                @if($key != count($menu->worksheet_list->sheet_title)-1)
+                    <div class="body bg-teal">
+                        <div class="font-bold m-b--35">{{$data}}</div>
+                        {{-- <ul class="dashboard-stat-list">
+                            <li style="color:yellow">
+                                <span class="pull-right">
+                                    <b>{{$data}}</b>
+                                </span>
+                            </li>
+                        </ul> --}}
+                    </div>
+                @endif
+            @endforeach
         </div>
     </div>
     <!-- #END# Answered Tickets -->
