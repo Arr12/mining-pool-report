@@ -66,6 +66,7 @@ class PageController extends Controller
         $ClassMenu = new SheetController;
         $menu = $ClassMenu->GetWorksheet();
         $arr = [];
+        dd($menu);
         foreach($menu->worksheet_list->sheet_title as $key => $value){
             $x = $this->IndexValues($value);
             array_push($arr, $x);
