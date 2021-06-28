@@ -1,4 +1,3 @@
-@dd($profile)
 @extends('admin.layouts.app')
 {{-- @dd($menu->worksheet_list->sheet_title) --}}
 @push('before-style')
@@ -67,19 +66,24 @@
                     List SS
                 </h2>
             </div>
-            @foreach ($home_menus->worksheet_list->sheet_title as $key => $data)
-                @if($key != count($menu->worksheet_list->sheet_title)-1)
+            @foreach ($menu->worksheet_list->sheet_title as $key => $data)
+                    @if($key != count($menu->worksheet_list->sheet_title)-1)
                     <div class="body bg-teal">
-                        <div class="font-bold m-b--35">{{$data}}</div>
+                        <div class="font-bold m-b--35">
+                            <a style="color:#fff;" href="{{route('mining')}}?d={{$data}}">
+                                {{$data}}
+                            </a>
+                        </div>
+                        <br>
                         {{-- <ul class="dashboard-stat-list">
                             <li style="color:yellow">
                                 <span class="pull-right">
-                                    <b>{{$data}}</b>
+                                    <b>Owner {{$data['owner_name']}}</b>
                                 </span>
                             </li>
                         </ul> --}}
                     </div>
-                @endif
+                    @endif
             @endforeach
         </div>
     </div>

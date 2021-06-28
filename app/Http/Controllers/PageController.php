@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class PageController extends Controller
 {
+    public $ttl = 60 * 60 * 24;
     public function FormatDateTime($str){
         $formatter = explode('/',$str);
         try {
@@ -62,24 +64,34 @@ class PageController extends Controller
         }while($endarr[$i-1]<$nextmonth);
         return $date;
     }
-    public function IndexHome(){
-        $ClassMenu = new SheetController;
-        $menu = $ClassMenu->GetWorksheet();
-        $arr = [];
-        dd($menu);
-        foreach($menu->worksheet_list->sheet_title as $key => $value){
-            $x = $this->IndexValues($value);
-            array_push($arr, $x);
+    public function CacheSanitizer(){
+        $cached = Cache::get('profile', false);
+        if(!$cached){
+            $cached = Cache::remember('profile', $this->ttl, function () {
+                $df = new SheetController;
+                $value = $df->GetWorksheet();
+                $arr_x = [];
+                $values = $value->worksheet_list->sheet_title ?: [];
+                foreach($values as $key => $value){
+                    if($key != count($values)-1){
+                        $x = $df->GetValue($value);
+                        array_push($arr_x, $x);
+                    }
+                }
+                return collect($arr_x);
+            });
+            $q = $cached;
+        }else{
+            $q = $cached;
         }
-        return view('admin.pages.home',[
-            'home_menus' => $menu,
-            'profile' => $arr,
-        ]);
+        return $q;
     }
-    public function IndexValues($request){
+    public function IndexHome(){
+        return view('admin.pages.home');
+    }
+    public function IndexValues(Request $request){
         $df = new SheetController;
-        $val = $request ?: request()->input('d');
-        $x = $df->GetValue($val);
+        $x = $df->GetValue($request->input('d'));
         // dd($x->value[0]);
         $arr = [
             'worker_name' => isset($x->value[0][0][2]) ? $x->value[0][0][2] : 0,
