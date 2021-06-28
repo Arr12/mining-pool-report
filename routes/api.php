@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\SheetController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -20,4 +21,5 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::prefix('/spreadsheet')->name('api.spreadsheet')->group(function(){
     Route::get('/get-worksheet', [SheetController::class, 'GetWorksheet'])->name('get-worksheet');
     Route::get('/get-value', [SheetController::class, 'GetValue'])->name('get-value');
+    Route::get('/get-all', [SheetController::class, 'GetAll'])->name('get-all');
 });

@@ -64,46 +64,49 @@ class PageController extends Controller
         }while($endarr[$i-1]<$nextmonth);
         return $date;
     }
-    public function CacheSanitizer(){
-        $cached = Cache::get('profile', false);
-        if(!$cached){
-            $cached = Cache::remember('profile', $this->ttl, function () {
-                $df = new SheetController;
-                $value = $df->GetWorksheet();
-                $arr_x = [];
-                $values = $value->worksheet_list->sheet_title ?: [];
-                foreach($values as $key => $value){
-                    if($key != count($values)-1){
-                        $x = $df->GetValue($value);
-                        array_push($arr_x, $x);
-                    }
-                }
-                return collect($arr_x);
-            });
-            $q = $cached;
-        }else{
-            $q = $cached;
-        }
-        return $q;
-    }
     public function IndexHome(){
-        return view('admin.pages.home');
+        $cached = Cache::get('data-worksheet', false);
+        if(!$cached){
+            $s = new SheetController;
+            $df = $s->GetAll();
+        }else{
+            $df = $cached;
+        }
+        $x = $df->toArray();
+        $counter = 0;
+        $arr['menus'] = [];
+        $arr['owner_name'] = [];
+        foreach($x as $key => $data){
+            if($counter < count($x)-1){
+                array_push($arr['menus'], $key);
+                array_push($arr['owner_name'], isset($x[$key][0][0][4]) ? $x[$key][0][0][4] : 0);
+            }
+            $counter++;
+        }
+        return view('admin.pages.home',[
+            'profile' => $arr
+        ]);
     }
     public function IndexValues(Request $request){
-        $df = new SheetController;
-        $x = $df->GetValue($request->input('d'));
-        // dd($x->value[0]);
+        $cached = Cache::get('data-worksheet', false);
+        if(!$cached){
+            $s = new SheetController;
+            $df = $s->GetAll();
+        }else{
+            $df = $cached;
+        }
+        $x = $df->toArray()[$request->input('d')];
         $arr = [
-            'worker_name' => isset($x->value[0][0][2]) ? $x->value[0][0][2] : 0,
-            'owner_name' => isset($x->value[0][0][4]) ? $x->value[0][0][4] : 0,
-            'vga' => isset($x->value[0][1][2]) ? $x->value[0][1][2] : 0,
-            'quantity' => isset($x->value[0][1][4]) ? $x->value[0][1][4] : 0,
-            'placement' => isset($x->value[0][2][2]) ? $x->value[0][2][2] : 0,
-            'start_mining' => isset($x->value[0][2][4]) ? $x->value[0][2][4] : 0,
-            'customer_share' => isset($x->value[0][3][2]) ? $x->value[0][3][2] : 0,
-            'company_share' => isset($x->value[0][3][4]) ? $x->value[0][3][4] : 0,
-            'wallet_address' => isset($x->value[0][4][2]) ? $x->value[0][4][2] : 0,
-            'total_eth_customer' => isset($x->value[0][5][6]) ? $x->value[0][5][6] : 0,
+            'worker_name' => isset($x[0][0][2]) ? $x[0][0][2] : 0,
+            'owner_name' => isset($x[0][0][4]) ? $x[0][0][4] : 0,
+            'vga' => isset($x[0][1][2]) ? $x[0][1][2] : 0,
+            'quantity' => isset($x[0][1][4]) ? $x[0][1][4] : 0,
+            'placement' => isset($x[0][2][2]) ? $x[0][2][2] : 0,
+            'start_mining' => isset($x[0][2][4]) ? $x[0][2][4] : 0,
+            'customer_share' => isset($x[0][3][2]) ? $x[0][3][2] : 0,
+            'company_share' => isset($x[0][3][4]) ? $x[0][3][4] : 0,
+            'wallet_address' => isset($x[0][4][2]) ? $x[0][4][2] : 0,
+            'total_eth_customer' => isset($x[0][5][6]) ? $x[0][5][6] : 0,
         ];
         return view('admin.pages.content',[
             'arr' => $arr
@@ -118,7 +121,6 @@ class PageController extends Controller
         $data_array['data'] = [];
         $data_sanitizer = [];
         $title = [
-            "No.",
             "Date.",
             "Avg. Hash Power",
             "Income Mining",
@@ -127,16 +129,22 @@ class PageController extends Controller
         foreach ($title as $key => $value) {
             array_push($data_array['columns'], ["title" => $value]);
         }
-        $df = new SheetController;
-        $x = $df->GetValue($request->input('d'));
-        if(isset($x->value[0])){
-            foreach($x->value[0] as $key => $value){
+        $cached = Cache::get('data-worksheet', false);
+        if(!$cached){
+            $s = new SheetController;
+            $df = $s->GetAll();
+        }else{
+            $df = $cached;
+        }
+        $x = $df->toArray()[$request->input('d')];
+        if(isset($x[0])){
+            foreach($x[0] as $key => $value){
                 if($key >= 6){
-                    if(!$x->value[0][$key][0]){continue;}
+                    if(!$x[0][$key][0]){continue;}
                     $arr2 = [];
                     $arr_sanitizer = [];
-                    foreach($x->value[0][$key] as $key2 => $value2){
-                        if($key2 >= 0 || $key2 <= 4){
+                    foreach($x[0][$key] as $key2 => $value2){
+                        if(($key2 >= 1) && ($key2 <= 4)){
                             if($key2 == 1){
                                 $value2 = $this->FormatDateTime($value2);
                             }
@@ -173,23 +181,28 @@ class PageController extends Controller
         $data_array['data'] = [];
         $data_sanitizer = [];
         $title = [
-            "No.",
             "Date.",
             "Nominal",
         ];
         foreach ($title as $key => $value) {
             array_push($data_array['columns'], ["title" => $value]);
         }
-        $df = new SheetController;
-        $x = $df->GetValue($request->input('d'));
-        if(isset($x->value[0])){
-            foreach($x->value[0] as $key => $value){
-                if(isset($x->value[0][$key][9]) && $key >= 6){
-                    if(!$x->value[0][$key][9]){break;}
+        $cached = Cache::get('data-worksheet', false);
+        if(!$cached){
+            $s = new SheetController;
+            $df = $s->GetAll();
+        }else{
+            $df = $cached;
+        }
+        $x = $df->toArray()[$request->input('d')];
+        if(isset($x[0])){
+            foreach($x[0] as $key => $value){
+                if(isset($x[0][$key][9]) && $key >= 6){
+                    if(!$x[0][$key][9]){break;}
                     $arr2 = [];
                     $arr_sanitizer = [];
-                    foreach($x->value[0][$key] as $key2 => $value2){
-                        if($key2 == 9 || $key2 == 10 || $key2 == 11){
+                    foreach($x[0][$key] as $key2 => $value2){
+                        if($key2 == 10 || $key2 == 11){
                             if($key2 == 10){
                                 $value2 = $this->FormatDateTime($value2);
                             }

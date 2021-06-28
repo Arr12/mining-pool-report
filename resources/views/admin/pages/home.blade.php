@@ -1,3 +1,6 @@
+@php
+    $role = auth()->user()->role;
+@endphp
 @extends('admin.layouts.app')
 {{-- @dd($menu->worksheet_list->sheet_title) --}}
 @push('before-style')
@@ -21,6 +24,33 @@
 
 <!-- Sparkline Chart Plugin Js -->
 <script src="/plugins/jquery-sparkline/jquery.sparkline.js"></script>
+<script>
+    $("#getDataDaily").on('click',function(){
+        $(this).attr('disabled','disabled');
+        $.ajax({
+            type:'GET',
+            url: "{{route('api.spreadsheetget-all')}}",
+            success:function(){
+                $("#getDataDaily").removeAttr('disabled','disabled');
+                $("#alert").html(`
+                <div class="alert alert-success alert-dismissible" role="alert" id="alert_success">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <strong>Success!</strong> Data has been updated!
+                </div>`
+                );
+            },
+            error:function(){
+                $("#getDataDaily").removeAttr('disabled','disabled');
+                $("#alert").html(`
+                <div class="alert alert-danger alert-dismissible" role="alert" id="alert_danger">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <strong>Oh snap!</strong> Can't get data, check your internet connection or contact the creator!.
+                </div>
+                `);
+            }
+        });
+    });
+</script>
 @endpush
 
 @section('content')
@@ -58,6 +88,7 @@
 </div> --}}
 <!-- #END# Widgets -->
 <div class="row clearfix">
+    <div id="alert"></div>
     <!-- Answered Tickets -->
     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
         <div class="card">
@@ -65,23 +96,31 @@
                 <h2>
                     List SS
                 </h2>
+                @if ($role == 'Administrator')
+                    <ul class="header-dropdown m-r--5">
+                        <li class="dropdown">
+                            <button id='getDataDaily' class="btn waves-effect btn-default" role="button" aria-haspopup="true" aria-expanded="false">
+                                <i style="color:#000 !important;" class="material-icons">file_download</i> Import
+                            </button>
+                        </li>
+                    </ul>
+                @endif
             </div>
-            @foreach ($menu->worksheet_list->sheet_title as $key => $data)
-                    @if($key != count($menu->worksheet_list->sheet_title)-1)
+            @foreach ($profile['menus'] as $key => $data)
+                    @if($key != count($profile['menus'])-1)
                     <div class="body bg-teal">
                         <div class="font-bold m-b--35">
                             <a style="color:#fff;" href="{{route('mining')}}?d={{$data}}">
                                 {{$data}}
                             </a>
                         </div>
-                        <br>
-                        {{-- <ul class="dashboard-stat-list">
+                        <ul class="dashboard-stat-list">
                             <li style="color:yellow">
                                 <span class="pull-right">
-                                    <b>Owner {{$data['owner_name']}}</b>
+                                    <b>Owner : {{$profile['owner_name'][$key]}}</b>
                                 </span>
                             </li>
-                        </ul> --}}
+                        </ul>
                     </div>
                     @endif
             @endforeach
