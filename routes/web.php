@@ -21,6 +21,6 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/withdraw-data', [PageController::class, 'GetValuesWithdraw'])->name('withdraw-data');
 });
 
-Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
-    return view('dashboard');
-})->name('dashboard');
+// Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
+//     return view('dashboard');
+// })->name('dashboard');
