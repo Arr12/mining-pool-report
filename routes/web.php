@@ -19,6 +19,12 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/mining', [PageController::class, 'IndexValues'])->name('mining');
     Route::get('/mining-data', [PageController::class, 'GetValues'])->name('mining-data');
     Route::get('/withdraw-data', [PageController::class, 'GetValuesWithdraw'])->name('withdraw-data');
+    Route::prefix('/master')->name('master.')->group(function () {
+        Route::get('/user', [PageController::class, 'IndexMasterUser'])->name('user');
+        Route::get('/user-data', [PageController::class, 'GetMasterUser'])->name('user-data');
+        Route::put('/user-put', [PageController::class, 'PutMasterUser'])->name('user-put');
+        Route::post('/user-add', [PageController::class, 'AddMasterUser'])->name('user-add');
+    });
 });
 
 // Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {

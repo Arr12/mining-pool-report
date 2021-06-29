@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Hash;
 
 class PageController extends Controller
 {
@@ -65,27 +67,68 @@ class PageController extends Controller
         return $date;
     }
     public function IndexHome(){
-        $cached = Cache::get('data-worksheet', false);
-        if(!$cached){
-            $s = new SheetController;
-            $df = $s->GetAll();
-        }else{
-            $df = $cached;
+        return view('admin.pages.home');
+    }
+    public function IndexMasterUser(){
+        return view('admin.pages.master.user');
+    }
+    public function GetMasterUser(){
+        /* --------------
+        / HEAD DATA
+        --------------- */
+        $data_array['columns'] = [];
+        $data_array['data'] = [];
+        $title = [
+            "Edit",
+            "No.",
+            "Name",
+            "Email",
+            "Role",
+        ];
+        foreach ($title as $key => $value) {
+            array_push($data_array['columns'], ["title" => $value]);
         }
-        $x = $df->toArray();
-        $counter = 0;
-        $arr['menus'] = [];
-        $arr['owner_name'] = [];
-        foreach($x as $key => $data){
-            if($counter < count($x)-1){
-                array_push($arr['menus'], $key);
-                array_push($arr['owner_name'], isset($x[$key][0][0][4]) ? $x[$key][0][0][4] : 0);
-            }
-            $counter++;
+        $query = User::select('id','name','email','role')->orderBy('id','asc')->get();
+        foreach($query as $key => $val){
+            $edit = "<button class='btn btn-primary waves-effect' id='edit' data-id='$val->id' data-name='$val->name' data-email='$val->email' data-role='$val->role' data-toggle='modal' data-target='#editModal'><i class='material-icons'>edit</i></button>";
+            $arr = [
+                $edit,
+                $key+1,
+                $val->name,
+                $val->email,
+                $val->role,
+            ];
+            array_push($data_array['data'],$arr);
         }
-        return view('admin.pages.home',[
-            'profile' => $arr
-        ]);
+        return $data_array;
+    }
+    public function PutMasterUser(Request $request){
+        $id = $request->input('id');
+        try {
+            $data = User::findOrFail($id);
+            $isi = [
+                "name" => $request->input('name'),
+                "email" => $request->input('email'),
+                "role" => $request->input('role'),
+            ];
+            $data->update($isi);
+            return ['data' => 200];
+        } catch (\Throwable $th) {
+            return ['data' => null];
+        }
+    }
+    public function AddMasterUser(Request $request){
+        try {
+            User::create([
+                'name' => $request->input('name'),
+                'email' => $request->input('email'),
+                'role' => $request->input('role'),
+                'password' => Hash::make($request->input('password')),
+            ]);
+            return ['data' => 200];
+        } catch (\Throwable $th) {
+            return ['data' => null];
+        }
     }
     public function IndexValues(Request $request){
         $cached = Cache::get('data-worksheet', false);

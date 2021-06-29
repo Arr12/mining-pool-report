@@ -1,3 +1,6 @@
+@php
+    $role = auth()->user()->role;
+@endphp
 <section>
     <!-- Left Sidebar -->
     <aside id="leftsidebar" class="sidebar desktop-toggle-hide">
@@ -40,14 +43,36 @@
                         <span>Home</span>
                     </a>
                 </li>
-                @foreach ($menu->worksheet_list->sheet_title as $key => $data)
-                    @if($key != count($menu->worksheet_list->sheet_title)-1)
+                @if ($role == 'Administrator')
                     <li>
-                        <a href="/mining?d={{$data}}">
-                            <i class="material-icons">notifications</i>
-                            <span>{{$data}}</span>
+                        <a href="javascript:void(0);" class="menu-toggle">
+                            <i class="material-icons">import_contacts</i>
+                            <span>Master</span>
                         </a>
+                        <ul class="ml-menu">
+                            <li>
+                                <a href="{{route('master.user')}}">
+                                    <span>User</span>
+                                </a>
+                            </li>
+                        </ul>
                     </li>
+                @endif
+                @foreach ($profile['menus'] as $key => $data)
+                    @if ($profile['owner_name'][$key] == $role && $role != 'Administrator')
+                        <li>
+                            <a href="/mining?d={{$data}}">
+                                <i class="material-icons">notifications</i>
+                                <span>{{$data}}</span>
+                            </a>
+                        </li>
+                    @elseif ($role == 'Administrator')
+                        <li>
+                            <a href="/mining?d={{$data}}">
+                                <i class="material-icons">notifications</i>
+                                <span>{{$data}}</span>
+                            </a>
+                        </li>
                     @endif
                 @endforeach
             </ul>

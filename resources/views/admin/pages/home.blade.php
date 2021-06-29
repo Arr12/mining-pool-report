@@ -110,9 +110,7 @@
                     @if($key != count($profile['menus'])-1)
                     <div class="body bg-teal">
                         <div class="font-bold m-b--35">
-                            <a style="color:#fff;" href="{{route('mining')}}?d={{$data}}">
-                                {{$data}}
-                            </a>
+                            {{$data}}
                         </div>
                         <ul class="dashboard-stat-list">
                             <li style="color:yellow">

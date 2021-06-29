@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Http\Controllers\SheetController;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -25,9 +26,25 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         view()->composer('*', function ($view) {
-            $ClassMenu = new SheetController;
-            $menu = $ClassMenu->GetWorksheet();
-            $view->with('menu',$menu);
+            $cached = Cache::get('data-worksheet', false);
+            if(!$cached){
+                $s = new SheetController;
+                $df = $s->GetAll();
+            }else{
+                $df = $cached;
+            }
+            $x = $df->toArray();
+            $counter = 0;
+            $arr['menus'] = [];
+            $arr['owner_name'] = [];
+            foreach($x as $key => $data){
+                if($counter < count($x)-1){
+                    array_push($arr['menus'], $key);
+                    array_push($arr['owner_name'], isset($x[$key][0][0][4]) ? $x[$key][0][0][4] : 0);
+                }
+                $counter++;
+            }
+            $view->with('profile',$arr);
         });
     }
 }
