@@ -121,6 +121,7 @@ class PageController extends Controller
         $data_array['data'] = [];
         $data_sanitizer = [];
         $title = [
+            "No.",
             "Date.",
             "Avg. Hash Power",
             "Income Mining",
@@ -144,7 +145,7 @@ class PageController extends Controller
                     $arr2 = [];
                     $arr_sanitizer = [];
                     foreach($x[0][$key] as $key2 => $value2){
-                        if(($key2 >= 1) && ($key2 <= 4)){
+                        if($key2 >= 0 || $key2 <= 4){
                             if($key2 == 1){
                                 $value2 = $this->FormatDateTime($value2);
                             }
@@ -165,7 +166,7 @@ class PageController extends Controller
             $date = $this->WeekFromDate($m);
             $startdate = $date['startdate'][0];
             $enddate = $date['enddate'][count($date['enddate'])-1];
-            $x = $sanitizer->whereBetween(0, [$startdate, $enddate]);
+            $x = $sanitizer->whereBetween(1, [$startdate, $enddate]);
             foreach($x->toArray() as $key => $val){
                 array_push($data_array['data'], $val);
             }
@@ -181,6 +182,7 @@ class PageController extends Controller
         $data_array['data'] = [];
         $data_sanitizer = [];
         $title = [
+            "No.",
             "Date.",
             "Nominal",
         ];
@@ -202,7 +204,7 @@ class PageController extends Controller
                     $arr2 = [];
                     $arr_sanitizer = [];
                     foreach($x[0][$key] as $key2 => $value2){
-                        if($key2 == 10 || $key2 == 11){
+                        if($key2 == 9 || $key2 == 10 || $key2 == 11){
                             if($key2 == 10){
                                 $value2 = $this->FormatDateTime($value2);
                             }
@@ -223,7 +225,7 @@ class PageController extends Controller
             $date = $this->WeekFromDate($m);
             $startdate = $date['startdate'][0];
             $enddate = $date['enddate'][count($date['enddate'])-1];
-            $x = $sanitizer->whereBetween(0, [$startdate, $enddate]);
+            $x = $sanitizer->whereBetween(1, [$startdate, $enddate]);
             foreach($x->toArray() as $key => $val){
                 array_push($data_array['data'], $val);
             }

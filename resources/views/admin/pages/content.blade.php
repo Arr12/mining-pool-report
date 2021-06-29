@@ -48,7 +48,7 @@ let Tabel = function(url){
                 buttons: ['copy'],
                 destroy: true,
                 searching: true,
-                order: [[0,'desc']]
+                order: [[0,'asc']]
             });
             $('a.toggle-vis').on( 'click', function (e) {
                 e.preventDefault();
