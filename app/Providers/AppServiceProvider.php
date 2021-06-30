@@ -38,10 +38,8 @@ class AppServiceProvider extends ServiceProvider
             $arr['menus'] = [];
             $arr['owner_name'] = [];
             foreach($x as $key => $data){
-                if($counter < count($x)-1){
-                    array_push($arr['menus'], $key);
-                    array_push($arr['owner_name'], isset($x[$key][0][0][4]) ? $x[$key][0][0][4] : 0);
-                }
+                array_push($arr['menus'], $key);
+                array_push($arr['owner_name'], isset($x[$key][0][0][4]) ? $x[$key][0][0][4] : 0);
                 $counter++;
             }
             $view->with('profile',$arr);

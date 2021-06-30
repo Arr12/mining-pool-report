@@ -196,6 +196,31 @@ class PageController extends Controller
                             array_push($arr_sanitizer, $value2);
                         }
                     }
+                    if(count($x[0][$key]) == 1){
+                        for($i=0;$i<5;$i++){
+                            array_push($arr2, "");
+                        }
+                    }
+                    else if(count($x[0][$key]) == 2){
+                        for($i=0;$i<4;$i++){
+                            array_push($arr2, "");
+                        }
+                    }
+                    else if(count($x[0][$key]) == 3){
+                        for($i=0;$i<3;$i++){
+                            array_push($arr2, "");
+                        }
+                    }
+                    else if(count($x[0][$key]) == 4){
+                        for($i=0;$i<2;$i++){
+                            array_push($arr2, "");
+                        }
+                    }
+                    else{
+                        for($i=0;$i<1;$i++){
+                            array_push($arr2, "");
+                        }
+                    }
                     if(isset($m)){
                         array_push($data_sanitizer, $arr2);
                     } else {
@@ -255,6 +280,16 @@ class PageController extends Controller
                             array_push($arr_sanitizer, $value2);
                         }
                     }
+                    if(count($x[0][$key]) == 10){
+                        for($i=0;$i<2;$i++){
+                            array_push($arr2, "");
+                        }
+                    }else{
+                        for($i=0;$i<1;$i++){
+                            array_push($arr2, "");
+                        }
+                    }
+
                     if(isset($m)){
                         array_push($data_sanitizer, $arr2);
                     } else {
