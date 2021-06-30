@@ -22,4 +22,5 @@ Route::prefix('/spreadsheet')->name('api.spreadsheet')->group(function(){
     Route::get('/get-worksheet', [SheetController::class, 'GetWorksheet'])->name('get-worksheet');
     Route::get('/get-value', [SheetController::class, 'GetValue'])->name('get-value');
     Route::get('/get-all', [SheetController::class, 'GetAll'])->name('get-all');
+    Route::get('/get-ss-data', [SheetController::class, 'GetSSData'])->name('get-ss-data');
 });

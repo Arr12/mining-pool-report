@@ -10,6 +10,7 @@ class SheetController extends Controller
 {
     public $ttl = 60 * 60 * 24;
     public $spreadsheetId = "15vgY5sP3fIOxQvYQ5uiJeqZklpaFgAnOKSK82HZK3No";
+    public $range = "A:L";
     public function GetWorksheet(){
         $curl = curl_init();
         $spreadsheetId = $this->spreadsheetId;
@@ -32,9 +33,10 @@ class SheetController extends Controller
     public function GetValue($request){
         $curl = curl_init();
         $spreadsheetId = $this->spreadsheetId;
+        $range = $this->range;
         $sheet_title = $request;
         curl_setopt_array($curl, array(
-            CURLOPT_URL => "http://45.76.182.41:5000/get-value/$spreadsheetId/$sheet_title",
+            CURLOPT_URL => "http://45.76.182.41:5000/get-value/$spreadsheetId/$sheet_title/$range",
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => '',
             CURLOPT_MAXREDIRS => 10,
@@ -51,19 +53,16 @@ class SheetController extends Controller
     }
     public function GetAll(){
         Cache::forget('data-worksheet');
-        $cached = Cache::remember('data-worksheet', $this->ttl, function () {
-            $y = $this->GetWorksheet();
-            $arr_x = [];
-            $values = $y->worksheet_list->sheet_title ?: [];
-            foreach($values as $key => $data){
+        $y = $this->GetWorksheet();
+        $values = $y->worksheet_list->sheet_title ?: [];
+        foreach($values as $key => $data){
+            if($key != count($values)-1){
                 $arr_x[$data] = [];
-                if($key != count($values)-1){
-                    $x = $this->GetValue($data);
-                    array_push($arr_x[$data], $x->value[0]);
-                }
+                $x = $this->GetValue($data);
+                array_push($arr_x[$data], $x->value[0]);
             }
-            return collect($arr_x);
-        });
+        }
+        Cache::forever('data-worksheet', collect($arr_x));
         return ResponseFormatter::success(null, "Success", 200);
     }
 }
