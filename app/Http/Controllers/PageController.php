@@ -67,7 +67,22 @@ class PageController extends Controller
         return $date;
     }
     public function IndexHome(){
-        return view('admin.pages.home');
+        $role = auth()->user()->role;
+        if($role == 'Administrator'){
+            return view('admin.pages.home');
+        }else{
+            $cached = Cache::get('data-worksheet', false);
+            $x = $cached->toArray();
+            $arr['menus'] = [];
+            foreach($x as $key => $data){
+                $owner_name = isset($x[$key][0][0][4]) ? $x[$key][0][0][4] : 0;
+                if($owner_name == $role){
+                    array_push($arr['menus'], $key);
+                }
+            }
+            $first_menus = $arr['menus'][0];
+            return redirect("/mining?d=$first_menus");
+        }
     }
     public function IndexMasterUser(){
         return view('admin.pages.master.user');

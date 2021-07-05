@@ -37,13 +37,13 @@
         <div class="menu">
             <ul class="list">
                 <li class="header">MAIN NAVIGATION</li>
-                <li>
-                    <a href="/">
-                        <i class="material-icons">home</i>
-                        <span>Home</span>
-                    </a>
-                </li>
                 @if ($role == 'Administrator')
+                    <li>
+                        <a href="/">
+                            <i class="material-icons">home</i>
+                            <span>Home</span>
+                        </a>
+                    </li>
                     <li>
                         <a href="javascript:void(0);" class="menu-toggle">
                             <i class="material-icons">import_contacts</i>
