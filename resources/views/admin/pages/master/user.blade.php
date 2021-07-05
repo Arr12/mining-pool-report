@@ -100,7 +100,8 @@ $(document).on('click','#saveModal',function(){
             "id" : $("#editModalID").html(),
             "name" : $("#name").val(),
             "email" : $("#email").val(),
-            "role" : $("#role").val()
+            "role" : $("#role").val(),
+            "password" : $("#password").val(),
         },
         success:function(){
             $('#saveModal').removeAttr('disabled','disabled');
@@ -233,6 +234,13 @@ $(document).on('click','#saveModalAdd',function(){
                             <div class="form-line">
                                 <input type="text" class="form-control" id="name" />
                             </div>
+                        </div>
+                        <div class="form-group form-float">
+                            <label>Password</label>
+                            <div class="form-line">
+                                <input type="password" class="form-control" id="password" />
+                            </div>
+                            <small>*) Give blank, if nothing to change</small>
                         </div>
                         <div class="form-group form-float">
                             <label>Email</label>

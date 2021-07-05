@@ -121,11 +121,20 @@ class PageController extends Controller
         $id = $request->input('id');
         try {
             $data = User::findOrFail($id);
-            $isi = [
-                "name" => $request->input('name'),
-                "email" => $request->input('email'),
-                "role" => $request->input('role'),
-            ];
+            if($request->input('password')){
+                $isi = [
+                    "name" => $request->input('name'),
+                    "email" => $request->input('email'),
+                    "role" => $request->input('role'),
+                    "password" => Hash::make($request->input('password')),
+                ];
+            }else{
+                $isi = [
+                    "name" => $request->input('name'),
+                    "email" => $request->input('email'),
+                    "role" => $request->input('role'),
+                ];
+            }
             $data->update($isi);
             return ['data' => 200];
         } catch (\Throwable $th) {
