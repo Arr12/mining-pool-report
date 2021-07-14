@@ -15,7 +15,7 @@ class SheetController extends Controller
         $curl = curl_init();
         $spreadsheetId = $this->spreadsheetId;
         curl_setopt_array($curl, array(
-            CURLOPT_URL => "http://45.76.182.41:5000/get-spreadsheet/$spreadsheetId",
+            CURLOPT_URL => "http://208.87.134.42:5100/get-spreadsheet/$spreadsheetId",
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => '',
             CURLOPT_MAXREDIRS => 10,
@@ -36,7 +36,7 @@ class SheetController extends Controller
         $range = $this->range;
         $sheet_title = $request;
         curl_setopt_array($curl, array(
-            CURLOPT_URL => "http://45.76.182.41:5000/get-value/$spreadsheetId/$sheet_title/$range",
+            CURLOPT_URL => "http://208.87.134.42:5100/get-value/$spreadsheetId/$sheet_title/$range",
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => '',
             CURLOPT_MAXREDIRS => 10,
@@ -52,7 +52,9 @@ class SheetController extends Controller
         return json_decode($response);
     }
     public function GetAll(){
-        Cache::forget('data-worksheet');
+        Artisan::call('get:data');
+    }
+    public function GetAllFunc(){
         $y = $this->GetWorksheet();
         $values = $y->worksheet_list->sheet_title ?: [];
         foreach($values as $key => $data){
@@ -62,7 +64,12 @@ class SheetController extends Controller
                 array_push($arr_x[$data], $x->value[0]);
             }
         }
-        Cache::forever('data-worksheet', collect($arr_x));
-        return ResponseFormatter::success(null, "Success", 200);
+        if(count($arr_x)!=0){
+            Cache::forget('data-worksheet');
+            Cache::forever('data-worksheet', collect($arr_x));
+            return ResponseFormatter::success(null, "Success", 200);
+        }else{
+            return ResponseFormatter::success(null, "Server to busy", 400);
+        }
     }
 }

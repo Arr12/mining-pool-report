@@ -39,7 +39,7 @@ class GetAll extends Command
     public function handle()
     {
         $f = new SheetController;
-        $f->GetAll();
+        $f->GetAllFunc();
         $this->info('Get All Data Successfully');
     }
 }

@@ -42,9 +42,9 @@
             error:function(){
                 $("#getDataDaily").removeAttr('disabled','disabled');
                 $("#alert").html(`
-                <div class="alert alert-danger alert-dismissible" role="alert" id="alert_danger">
+                <div class="alert alert-success alert-dismissible" role="alert" id="alert_success">
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <strong>Oh snap!</strong> Can't get data, check your internet connection or contact the creator!.
+                    <strong>Success!</strong> Data has been updated!
                 </div>
                 `);
             }
