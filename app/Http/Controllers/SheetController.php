@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\ProcessImport;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Cache;
@@ -52,7 +53,8 @@ class SheetController extends Controller
         return json_decode($response);
     }
     public function GetAll(){
-        Artisan::call('get:data');
+        $daily = "data";
+        $this->dispatch(new ProcessImport($daily));
     }
     public function GetAllFunc(){
         $y = $this->GetWorksheet();
