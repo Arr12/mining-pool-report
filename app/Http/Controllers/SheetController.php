@@ -53,7 +53,7 @@ class SheetController extends Controller
         return json_decode($response);
     }
     public function GetAll(){
-        $daily = "data";
+        $daily = "get-data";
         $this->dispatch(new ProcessImport($daily));
     }
     public function GetAllFunc(){

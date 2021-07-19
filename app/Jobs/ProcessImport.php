@@ -35,7 +35,7 @@ class ProcessImport implements ShouldQueue
     {
         if(isset($this->data)){
             switch($this->data){
-                case "data" :
+                case "get-data" :
                     Artisan::call('get:data');
                     return ResponseFormatter::success(null, "Success", 200);
                 default :
