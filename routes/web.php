@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 Route::middleware(['auth:sanctum'])->group(function () {
-    Route::get('/', [PageController::class, 'IndexHome'])->name('mining');
+    Route::get('/', [PageController::class, 'IndexHome']);
     Route::get('/mining', [PageController::class, 'IndexValues'])->name('mining');
     Route::get('/mining-data', [PageController::class, 'GetValues'])->name('mining-data');
     Route::get('/withdraw-data', [PageController::class, 'GetValuesWithdraw'])->name('withdraw-data');
